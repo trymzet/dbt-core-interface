@@ -616,16 +616,28 @@ class DbtProject:
 
         This is the same as one would in a {{ ref(...) }} macro call.
         """
-        return cast(
-            "ManifestNode",
-            self.manifest.resolve_ref(
-                target_model_name=target_model_name,
-                target_model_package=None,
-                target_model_version=None,
-                current_project=self.config.project_name,
-                node_package=self.config.project_name,
-            ),
-        )
+
+        if (__dbt_major_version__, __dbt_minor_version__) >= (1, 5):
+            return cast(
+                "ManifestNode",
+                self.manifest.resolve_ref(
+                    target_model_name=target_model_name,
+                    target_model_package=None,
+                    target_model_version=None,
+                    current_project=self.config.project_name,
+                    node_package=self.config.project_name,
+                ),
+            )
+        else:
+            return cast(
+                "ManifestNode",
+                self.manifest.resolve_ref(
+                    target_model_name=target_model_name,
+                    target_model_package=None,
+                    current_project=self.config.project_name,
+                    node_package=self.config.project_name,
+                ),
+            )
 
     def get_source_node(self, target_source_name: str, target_table_name: str) -> "ManifestNode":
         """Get a `ManifestNode` from a dbt project source name and table name.
