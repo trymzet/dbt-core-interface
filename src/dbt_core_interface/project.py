@@ -617,6 +617,18 @@ class DbtProject:
         This is the same as one would in a {{ ref(...) }} macro call.
         """
 
+        if (__dbt_major_version__, __dbt_minor_version__) >= (1, 6):
+            return cast(
+                "ManifestNode",
+                self.manifest.resolve_ref(
+                    source_node=None,
+                    target_model_name=target_model_name,
+                    target_model_package=None,
+                    target_model_version=None,
+                    current_project=self.config.project_name,
+                    node_package=self.config.project_name,
+                ),
+            )
         if (__dbt_major_version__, __dbt_minor_version__) >= (1, 5):
             return cast(
                 "ManifestNode",
